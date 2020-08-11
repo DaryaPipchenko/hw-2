@@ -1,0 +1,33 @@
+version: "3"
+
+networks:
+  custom-app:
+    driver: bridge
+
+services:
+  app:
+    build: .
+    ports:
+      - "8080:80"
+    volumes:
+      - .:/var/www/html
+    networks:
+      - custom-app
+
+  pgsql:
+    image: "postgres:12.1"
+    restart: always
+    environment:
+      - POSTGRES_DB=wh2
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=pass
+    networks:
+      - custom-app
+
+  adminer:
+    image: "adminer:latest"
+    restart: always
+    ports:
+      - 8081:8080
+    networks:
+      - custom-app
